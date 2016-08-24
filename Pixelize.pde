@@ -6,7 +6,7 @@ class Pixelize {
   int numRows=10;
   int numCols=10;
   FloatList reds, greens, blues, totalColor;
-  MultiNumberEstimator est;
+  PixMultiNumberEstimator est;
 
   Pixelize(PImage image) {
     this.img=image;
@@ -84,7 +84,7 @@ class Pixelize {
      totalColor.set(i,redshift*reds.get(i)+greenshift*greens.get(i)+blues.get(i));
    }
    println("Starting estimating colors");
-   est= new MultiNumberEstimator(totalColor,12);
+   est= new PixMultiNumberEstimator(totalColor,12);
    est.estimate();
    println("Done estimating the colors");
    // now replace 
@@ -101,8 +101,9 @@ class Pixelize {
    for (int i=0; i<numRows*numCols; i++){
      totalColor.set(i,floor(est.estimate(totalColor.get(i))));
      reds.set(i,floor(totalColor.get(i))/redshift);
-     greens.set(i,(floor(totalColor.get(i))-reds.get(i)*redshift)/greenshift);
+     greens.set(i,floor(floor(totalColor.get(i))-reds.get(i)*redshift)/greenshift);
      blues.set(i,floor(totalColor.get(i))-reds.get(i)*redshift-greens.get(i)*greenshift);
+     println(reds.get(i),greens.get(i),blues.get(i));
    }
    
    
